@@ -1,0 +1,138 @@
+#include "headers.h"
+
+int patientsCounter = 0;
+Patient patients[100];
+
+Doctor doctors[10];
+int doctorsCounter = 0;
+
+int main(){
+	char tab[30];
+	bool sent = false;
+	int i;
+
+
+	createPatient("kek", "lol", "lol", "123", "lol");
+
+	createDoctor("johnny.b", "Jan", "Kowalski", "123");
+	createDoctor("kenny.g", "Krystian", "Nowak", "123");
+	createDoctor("przemo", "Przemyslaw", "Shmidt", "123");
+
+
+	
+	msqid1 = msgget(999, IPC_CREAT | 0666);
+	msqid2 = msgget(998, IPC_CREAT | 0666);
+
+	if(msqid1 == -1)
+		perror("msgget");
+
+	while(1){
+
+		if(msgrcv(msqid1,&msg1,sizeof(msg1) - sizeof(long),1,IPC_NOWAIT) != -1){
+			//logowanie pacjenta
+
+			bool logged = false;
+			int i = 0;
+
+			while(!logged && (i < patientsCounter)){
+				if(!strcmp(patients[i].id, msg1.tab1) && !strcmp(patients[i].password, msg1.tab2)){
+					logged = true;
+				}
+				else{
+					logged = false;
+
+				}
+				i++;
+			}
+
+			msg2.mtype = msg1.pid;
+			msg2.number[0] = i - 1;
+			if(!logged){
+
+				msg2.error = -1;
+
+			}
+			else{
+				msg2.error = 1;
+
+			}
+			msgsnd(msqid2, &msg2, sizeof(msg2) - sizeof(long), 0);
+		}
+		else if(msgrcv(msqid1,&msg1,sizeof(msg1) - sizeof(long),2,IPC_NOWAIT) != -1){
+			//dodawanie pacjenta
+			createPatient(msg1.tab1, msg1.tab2, msg1.tab3, msg1.tab4, msg1.tab5);
+		}
+		else if(msgrcv(msqid1,&msg1,sizeof(msg1) - sizeof(long),3,IPC_NOWAIT) != -1){
+			//wolni doktorzy w terminie
+		}
+		else if(msgrcv(msqid1,&msg1,sizeof(msg1) - sizeof(long),4,IPC_NOWAIT) != -1){
+			//wolne terminy w dniu
+		}
+		else if(msgrcv(msqid1,&msg1,sizeof(msg1) - sizeof(long),5,IPC_NOWAIT) != -1){
+			//wolne terminy doktora
+		}
+		else if(msgrcv(msqid1,&msg1,sizeof(msg1) - sizeof(long),6,IPC_NOWAIT) != -1){
+			//dodaj wizyte
+
+			createVisit();
+
+		}
+		else if(msgrcv(msqid1,&msg1,sizeof(msg1) - sizeof(long),7,IPC_NOWAIT) != -1){
+			//usun wizyte
+		}
+		else if(msgrcv(msqid1,&msg1,sizeof(msg1) - sizeof(long),8,IPC_NOWAIT) != -1){
+			//zmien date wizyty
+		}
+		else if(msgrcv(msqid1,&msg1,sizeof(msg1) - sizeof(long),9,IPC_NOWAIT) != -1){
+			//logowanie doktora
+			bool logged = false;
+			int i = 0;
+
+			while(!logged && (i < doctorsCounter)){
+				if(!strcmp(doctors[i].id, msg1.tab1) && !strcmp(doctors[i].password, msg1.tab2)){
+					logged = true;
+				}
+				else{
+					logged = false;
+
+				}
+				i++;
+			}
+
+			msg2.mtype = msg1.pid;
+			msg2.number[0] = i - 1;
+			if(!logged){
+
+				msg2.error = -1;
+				msgsnd(msqid2, &msg2, sizeof(msg2) - sizeof(long), 0);
+			}
+			else{
+				msg2.error = 1;
+				msgsnd(msqid2, &msg2, sizeof(msg2) - sizeof(long), 0);
+			}	
+		}
+		else if(msgrcv(msqid1,&msg1,sizeof(msg1) - sizeof(long),10,IPC_NOWAIT) != -1){
+			//wziecie urlopu
+		}
+		else if(msgrcv(msqid1,&msg1,sizeof(msg1) - sizeof(long),11,IPC_NOWAIT) != -1){
+			//listowanie wizyt
+		}
+		
+	}
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

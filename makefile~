@@ -1,0 +1,7 @@
+all: user registration
+
+user:
+	gcc user.c -o user -I -Wall
+
+registration:
+	gcc r.c p.c l.c -o registration -I -Wall
