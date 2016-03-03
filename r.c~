@@ -75,7 +75,7 @@ int main(){
 			//dodaj wizyte
 
 			createVisit();
-//printf("%s\n", asctime(&doctors[0].visitsTab[0]));
+
 		}
 		else if(msgrcv(msqid1,&msg1,sizeof(msg1) - sizeof(long),7,IPC_NOWAIT) != -1){
 			//usun wizyte

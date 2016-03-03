@@ -79,6 +79,9 @@ int main(){
 		}
 		else if(msgrcv(msqid1,&msg1,sizeof(msg1) - sizeof(long),7,IPC_NOWAIT) != -1){
 			//usun wizyte
+
+			deleteVisit();
+
 		}
 		else if(msgrcv(msqid1,&msg1,sizeof(msg1) - sizeof(long),8,IPC_NOWAIT) != -1){
 			//zmien date wizyty

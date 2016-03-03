@@ -5,13 +5,14 @@
 
 void createPatient(char * newid, char * fName, char * sName, char * pesel, char * password){
 
-    strcpy(patients[patientsCounter].id, newid);
-    strcpy(patients[patientsCounter].firstName, fName);
-    strcpy(patients[patientsCounter].secondName, sName);
-    strcpy(patients[patientsCounter].pesel, pesel);
-    strcpy(patients[patientsCounter].password, password);
+	strcpy(patients[patientsCounter].id, newid);
+	strcpy(patients[patientsCounter].firstName, fName);
+	strcpy(patients[patientsCounter].secondName, sName);
+	strcpy(patients[patientsCounter].pesel, pesel);
+	strcpy(patients[patientsCounter].password, password);
+	patients[patientsCounter].registered = false;
 
-    patientsCounter++;
+	patientsCounter++;
 }
 
 void listDoctorsTerm(struct tm * term){
@@ -49,6 +50,7 @@ void createVisit(){
 		else{
 			patients[patient].visit = tmpdate;
 			patients[patient].doctor = doctor;
+			patients[patient].registered = true;
 			doctors[doctor].visitsTab[doctors[doctor].visitsCounter] = tmpdate;
 			doctors[doctor].patientsTab[doctors[doctor].visitsCounter] = patient;
 			doctors[doctor].visitsCounter++;
@@ -64,6 +66,19 @@ void createVisit(){
 
 void deleteVisit(){
 
+	int patient = msg1.number[0];
+
+	if(patients[patient].registered == true){
+		patients[patient].registered = false;
+		msg2.time[0] = patients[patient].visit;
+		msg2.error = 1;
+	}
+	else{
+		msg2.error = -1;
+	}
+
+	msg2.mtype = msg1.pid;
+	msgsnd(msqid2, &msg2, sizeof(msg2) - sizeof(long), 0);
 }
 
 void modifyTerm(){

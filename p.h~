@@ -12,7 +12,7 @@ typedef struct patient{
 	char password[30];
 
 	struct tm visit;
-	Doctor doctor;
+	int doctor;
 
 }Patient;
 

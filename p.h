@@ -13,6 +13,7 @@ typedef struct patient{
 
 	struct tm visit;
 	int doctor;
+	bool registered;
 
 }Patient;
 

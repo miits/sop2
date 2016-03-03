@@ -46,6 +46,7 @@ printf("%d\n", pid);
 				switch(input){
 					case 1:{
 							 //utworz wizyte
+						
 							int doctor;
 
 							do{
@@ -89,11 +90,36 @@ printf("%d\n", pid);
 							
 							break;
 						 }
+						
 					case 2:{
 							 //odwolaj
-							
+						
+							char in;
+
+							do{
+								printf("Czy na pewno chcesz odwolac wizyte? [t\\n]\n");
+								scanf(" %c", &in);
+
+							}while(in != 't' && in != 'n');
+							if(in == 't'){
+								msg1.number[0] == patientNumber;
+								msg1.mtype = 6;
+								msg1.pid = pid;
+								msgsnd(msqid1, &msg1, sizeof(msg1) - sizeof(long), 0);
+								msgrcv(msqid2, &msg2, sizeof(msg2) - sizeof(long), pid, 0);
+								if(msg2.error == -1){
+									printf("Nie masz zarezerwowanej wizyty do usuniecia\n");
+								}
+								else{
+									printf("Wizyta %s usunieta\n",asctime(&msg2.time[0]));
+								}
+							}
+							else break;
+
+
 							break;
 						 }
+						
 					case 3:
 						 {
 							 //zmien termin
